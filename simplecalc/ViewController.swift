@@ -32,7 +32,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         textDisplay.userInteractionEnabled = false;
-        textDisplay.textAlignment = NSTextAlignmentRight;
+        textDisplay.textAlignment = NSTextAlignment.Right
         // Do any additional setup after loading the view, typically from a nib.
     }
 
@@ -53,37 +53,39 @@ class ViewController: UIViewController {
     
     @IBAction func ClickOperator(sender: UIButton) {
         operation = sender.currentTitle!
-        firstNumber = intVersion(currNumberString)
-        addToCountAndAvg(firstNumber)
-        NSLog("\(firstNumber)" )
+        setFirstNumber()
         
         textToDisplay += operation
+        NSLog("text to display'\(textToDisplay)'")
         displayToUI()
         
         currNumberString = ""
     }
     
     @IBAction func doOperation() {
-        secondNumber = intVersion(currNumberString)
-        addToCountAndAvg(secondNumber)
-        NSLog("\(secondNumber)" )
-        currNumberString = ""
+        
+        
         finishedOp = true
         
         switch operation {
         case "+" :
+            setSecondNumber()
             textToDisplay += " = \(add(firstNumber, right: secondNumber))"
             displayToUI()
         case "-" :
+            setSecondNumber()
             textToDisplay += " = \(subtract(firstNumber, right: secondNumber))"
             displayToUI()
         case "*" :
+            setSecondNumber()
             textToDisplay += " = \(multiply(firstNumber, right: secondNumber))"
             displayToUI()
         case "/" :
+            setSecondNumber()
             textToDisplay += " = \(divide(firstNumber, right: secondNumber))"
             displayToUI()
         case "%" :
+            setSecondNumber()
             textToDisplay += " = \(mod(firstNumber, right: secondNumber))"
             displayToUI()
         case "COUNT" :
@@ -97,15 +99,30 @@ class ViewController: UIViewController {
             displayToUI()
         default :
             print("Not a valid operator")
-            finishedOp = false
+            clearAll()
         }
+        currNumberString = ""
         operation = ""
         
     }
     
+    func setFirstNumber() {
+        firstNumber = intVersion(currNumberString)
+        addToCountAndAvg(firstNumber)
+        NSLog("first number \(firstNumber)")
+    }
+    
+    func setSecondNumber() {
+        secondNumber = intVersion(currNumberString)
+        addToCountAndAvg(secondNumber)
+        NSLog("second number \(secondNumber)")
+    }
+    
     func addToCountAndAvg(num : Int) {
-        numCount++
+        numCount += 1
+        NSLog("count is \(numCount)")
         numSum += num
+        NSLog("sum is \(numSum)")
     }
     
     func intVersion(toConvert : String) -> Int {
@@ -121,6 +138,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func clearClick(sender: AnyObject) {
+        NSLog("should clear")
         clearAll()
     }
     
@@ -138,6 +156,8 @@ class ViewController: UIViewController {
         numCount = 0;
         
         numSum = 0;
+        
+        displayToUI()
     }
     
     func add(left : Int, right : Int) -> Int {
@@ -149,6 +169,11 @@ class ViewController: UIViewController {
     }
     
     func divide(left : Int, right : Int) -> Int {
+        NSLog("left \(left)")
+        NSLog("right \(right)")
+        if (right == 0) {
+            return 0
+        }
         return left / right
     }
     
@@ -157,7 +182,7 @@ class ViewController: UIViewController {
     }
     
     func mod(left : Int, right : Int) -> Int {
-        return left * right
+        return left % right
     }
     
     func count() -> Int {
